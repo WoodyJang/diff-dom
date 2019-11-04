@@ -24,15 +24,90 @@
     -->
   <title>React App</title>
   <style type='text/css'>
-    .item-1 {
-      color: red;
+    .parent {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      background-color: aqua
+    }
+
+    .child {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      background-color: brown;
+      z-index: 111;
+    }
+
+    /* div.parent {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    } */
+    .child {
+      position: absolute;
+      /* left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%); */
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+    }
+
+    div.parent {
+      display: grid;
+    }
+
+    div.child {
+      justify-self: center;
+      align-self: center;
     }
   </style>
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
+  <div id="root">
+    <div class="parent">
+      <div class="child"></div>
+      <input id='inp' type="text" value='222'>
+    </div>
+  </div>
+  <script>
+    //防抖 动作绑定事件，动作发生后一定时间后触发事件，在这段时间内，如果该动作又发生，则重新等待一定时间再触发事件
+    function debounce(fn, time) {
+      let timeout = null
+      return function () {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+          fn.apply(this, arguments)
+        }, time)
+      }
+    }
+
+    //节流 动作绑定事件，动作发生后一段时间后触发事件，在这段时间内，如果动作又发生，则无视该动作，直到事件执行完后，才能重新触发。
+    function throttle(fn, time) {
+      let activeTime = 0;
+      return function () {
+        const current = Date.now();
+        if (current - activeTime > time) {
+          fn.apply(this, arguments);
+          activeTime = Date.now();
+        }
+      }
+    }
+
+
+    function sayHi() {
+      console.log('防抖成功');
+    }
+    var inp = document.getElementById('inp');
+    // inp.addEventListener('input', debounce(sayHi, 2000)); // 防抖
+
+    inp.addEventListener('input', throttle(sayHi, 2000)); 
+  </script>
   <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
